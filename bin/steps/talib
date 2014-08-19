@@ -38,25 +38,7 @@ if (grep -iq -e "TA-Lib" $REQ_TXT) then
   export LIBRARY_PATH=$(pwd)/python/lib:$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
   export LD_LIBRARY_PATH=$(pwd)/python/lib:$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
 
-  if (grep -iq "TA-Lib" $REQ_TXT) then
-    TALIB_VERSION=$(grep -i "TA-Lib" $REQ_TXT | cut -d'=' -f3)
-    if [ "$TALIB_VERSION" != "$VENDORED_TALIB_VERSION" ]; then
-      puts-step "TA-Lib $TALIB_VERSION requested. This buildpack only supports TA-Lib $VENDORED_TALib_VERSION"
-    elif [ ! -d "python/lib/python3.4/site-packages/TA_Lib-0.4.8-py3.4-linux-x86_64.egg" ]; then
-      puts-step "Copying compiled TA-Lib 0.4.8."
-      tar -xzf ${VENDORED_GIT_NAME}/${VENDORED_TALIB}.tar.gz
-    else
-      INSTALLED_TALIB_VERSION=$(find python/lib/python3.4/site-packages -name "TA_LIB-*" | cut -d'-' -f3)
-      if [ "$INSTALLED_TALIB_VERSION" == "$VENDORED_TALIB_VERSION" ]; then
-        puts-step "Existing TA-Lib ($INSTALLED_TALIB_VERSION) package detected."
-      else
-        puts-step "Removing old TA-Lib ($INSTALLED_TALIB_VERSION) package."
-        rm -rf python/lib/python3.4/site-packages/TA_LIB*
-        puts-step "Installing new TA-Lib ($VENDORED_TALIB_VERSION) package."
-        tar xzf ${VENDORED_GIT_NAME}/${VENDORED_TALIB}.tar.gz
-      fi
-    fi
-  fi
+  easy_install TA-Lib
 
   # Move everything from venv directory to python directory
   if [ -d "venv" ]; then
