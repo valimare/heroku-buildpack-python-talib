@@ -35,8 +35,8 @@ if (grep -iq -e "TA-Lib" $REQ_TXT) then
     tar -xvf ${VENDORED_GIT_NAME}/${VENDORED_BINARIES}.tar.gz > /dev/null
   fi
   export TALIB=$(pwd)/vendor/lib/libta/libta_lib.a
-  export LIBRARY_PATH=$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
-  export LD_LIBRARY_PATH=$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
+  export LIBRARY_PATH=$(pwd)/python/lib:$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
+  export LD_LIBRARY_PATH=$(pwd)/python/lib:$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
 
   # Move everything from venv directory to python directory
   if [ -d "venv" ]; then
