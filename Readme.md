@@ -7,8 +7,6 @@ This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) fo
 Usage
 -----
 
-For TA-Lib C libraries and the Python wrapper to be installed, "TA-Lib" must be present in `requirements.txt`
-
 Example usage:
 
     $ ls
@@ -43,9 +41,11 @@ You can also add it to upcoming builds of an existing application:
 
     $ heroku config:add BUILDPACK_URL=https://github.com/aneesh-neelam/heroku-buildpack-python-talib.git
 
-The buildpack will detect your app as Python if it has the file `requirements.txt` in the root. TA-Lib libraries and the Python wrapper will be installed if the file `requirements.txt` has TA-Lib as a dependency. 
+The buildpack will detect your app as Python if it has the file `requirements.txt` in the root.
 
 It will use Pip to install your dependencies, vendoring a copy of the Python runtime into your slug.
+
+TA-Lib prebuilt libraries and the Python wrapper will be installed if the file `requirements.txt` has TA-Lib as a dependency. The prebuilt libraries are hosted [here](https://github.com/aneesh-neelam/talib-binaries)
 
 Specify a Runtime
 -----------------
