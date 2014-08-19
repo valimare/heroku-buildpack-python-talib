@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# This script serves as the TA-Lib build step of the
+# [**Python Buildpack**](https://github.com/heroku/heroku-buildpack-python) 
+# compiler. 
+# 
+# A [buildpack](http://devcenter.heroku.com/articles/buildpacks) is an 
+# adapter between a Python application and Heroku's runtime.
+#
+# This script is invoked by [`bin/compile`](/).
+
+VENDORED_GIT_NAME="talib-binaries"
+VENDORED_GIT_REPO="git://github.com/aneesh-neelam/${VENDORED_GIT_NAME}.git"
+# The location of the pre-compiled TA-Lib binaries.
+VENDORED_BINARIES="talib-0.4.0"
+VENDORED_TALIB_VERSION="0.4.0"
+VENDORED_TALIB="talib-0.4.0"
+REQ_TXT=$(pwd)/requirements.txt
+
+# Syntax sugar.
+source $BIN_DIR/utils
+
+# If TA-Lib exists within requirements.txt then use binaries.
+if (grep -iq -e "TA-Lib" $REQ_TXT) then
+  puts-step "Detected TA-Lib in requirements.txt. Downloading prebuilt binaries."
+  cd .heroku
+  git clone --quiet ${VENDORED_GIT_REPO}
+
+  # set TALIB
+  if [ -d "vendor/lib/libta" ]; then
+    puts-step "Using cached binaries."
+  else
+    puts-step "Downloading TA-Lib binaries."
+    # Download and extract everything into target vendor directory.
+    tar -xvf ${VENDORED_GIT_NAME}/${VENDORED_BINARIES}.tar.gz > /dev/null
+  fi
+  export TALIB=$(pwd)/vendor/lib/libta/libta_lib.a
+  export LIBRARY_PATH=$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
+  export LD_LIBRARY_PATH=$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
+
+  # Move everything from venv directory to python directory
+  if [ -d "venv" ]; then
+    cp -a venv/* python/
+    rm -r venv
+  fi
+
+  if [ -d ${VENDORED_GIT_NAME} ]; then
+    rm -rf ${VENDORED_GIT_NAME}
+  fi
+  cd ..
+fi

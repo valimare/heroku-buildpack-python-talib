@@ -147,6 +147,9 @@ set -e
 
 mkdir -p $(dirname $PROFILE_PATH)
 
+# Install TA-Lib
+source $BIN_DIR/steps/talib
+
 # Install Python.
 source $BIN_DIR/steps/python
 
