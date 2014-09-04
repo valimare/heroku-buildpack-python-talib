@@ -38,8 +38,10 @@ if (grep -iq -e "TA-Lib" $REQ_TXT) then
   export LIBRARY_PATH=$(pwd)/python/lib:$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
   export LD_LIBRARY_PATH=$(pwd)/python/lib:$(pwd)/vendor/lib:$(pwd)/vendor/lib/libta
 
-  puts-step "Downloading TA-Lib Python wrapper and its dependencies."
+  puts-step "Downloading TA-Lib Python wrapper and its dependencies (numpy & Cython)."
+  pip install numpy
   pip install Cython
+  
   easy_install TA-Lib
 
   # Move everything from venv directory to python directory
